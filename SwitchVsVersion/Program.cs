@@ -17,9 +17,20 @@ namespace SwitchVsVersion
             	}
 
                 StringComparer comparer = StringComparer.InvariantCultureIgnoreCase ;
-                
-                string path = args[0];
-                string version = args[1];
+
+                string path;
+                string version;
+
+                if (args.Length == 1)
+                {
+                    path = Environment.CurrentDirectory;
+                    version = args[0];
+                }
+                else
+                {
+                    path = args[0];
+                    version = args[1];
+                }
 
                 if ( comparer.Compare( version ,"3.5Framework") == 0 )
                 {
