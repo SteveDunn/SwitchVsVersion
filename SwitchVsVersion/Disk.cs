@@ -2,6 +2,7 @@
 using System.Collections.Generic ;
 using System.IO ;
 using System.Linq ;
+using System.Text;
 
 namespace SwitchVsVersion
 {
@@ -23,8 +24,15 @@ namespace SwitchVsVersion
 
     	public static void ModifyFile( string pathToFile, IEnumerable< Mapping > mappings )
     	{
-			string allText = File.ReadAllText(pathToFile);
-    		if ( string.IsNullOrEmpty( allText ) )
+			string allText = null;
+    	    Encoding originalEncoding;
+            using (var fileStream = File.OpenText(pathToFile))
+            {
+                originalEncoding = fileStream.CurrentEncoding;
+                allText = fileStream.ReadToEnd();
+            }
+
+            if ( string.IsNullOrEmpty( allText ) )
     		{
     			return ;
     		}
@@ -41,7 +49,7 @@ namespace SwitchVsVersion
 				allText,
 				(current, eachMapping) => current.Replace(eachMapping.OldText, eachMapping.NewText));
 
-			File.WriteAllText(pathToFile, allText);
+			File.WriteAllText(pathToFile, allText, originalEncoding);
 		}
 
     	static bool anythingNeedsReplacing( string allText, IEnumerable< Mapping > mappings )
