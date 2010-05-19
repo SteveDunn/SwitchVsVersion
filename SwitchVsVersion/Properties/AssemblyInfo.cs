@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("SwitchVsVersion")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Credit Suisse")]
+[assembly: AssemblyCompany("Steve Dunn")]
 [assembly: AssemblyProduct("SwitchVsVersion")]
-[assembly: AssemblyCopyright("Copyright © Credit Suisse 2010")]
+[assembly: AssemblyCopyright("Copyright © Steve Dunn 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
