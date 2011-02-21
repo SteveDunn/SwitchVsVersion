@@ -90,5 +90,50 @@ namespace SwitchVsVersion
 				Console.WriteLine( @"NOTHING TO CHANGE, all configuration already set to '{0}'", targetPlatform ) ;
 			}
 		}
+		
+		static void modifyProjectFile_old(string projectFilePath, string targetPlatform)
+		{
+			Console.Write(
+				string.Format(
+					@"Converting to {0} - {1}... ", targetPlatform, projectFilePath ) ) ;
+
+			string allText = File.ReadAllText( projectFilePath ) ;
+			
+			const string pattern = @"
+(?<openingTag>\<Platform\s*Condition\s*=\s*"".*?""\s*\>)	#The opening tag
+(?<targetPlatform>.*?)										# the target platform value that we'll be replacing
+(?<closingTag>\</Platform\>)								# the closing tag" ;
+
+			bool modified = false ;
+
+			allText = Regex.Replace(
+				allText,
+				pattern,
+				new MatchEvaluator( match =>
+					{
+						bool samePlatform = StringComparer.Ordinal.Equals( match.Groups[ @"targetPlatform" ], targetPlatform ) ;
+						if( samePlatform )
+						{
+							return match.ToString( ) ;
+						}
+						
+						modified = true ;
+
+						return match.Groups[ @"openingTag" ] + targetPlatform + match.Groups[ @"closingTag" ] ;
+					} ),
+				RegexOptions.IgnorePatternWhitespace ) ;
+
+			if( modified )
+			{
+				File.WriteAllText( projectFilePath, allText ) ;
+			}	
+			else
+			{
+				Console.WriteLine( @"Nothing to change, already '{0}'", targetPlatform ) ;
+			}
+		
+
+			Console.WriteLine( @"Done" ) ;
+		}
 	}
 }
