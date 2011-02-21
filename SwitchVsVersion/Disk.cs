@@ -10,16 +10,16 @@ namespace SwitchVsVersion
     {
         public static IEnumerable<string> GetFiles( string path, string extension )
         {
-            var paths = new List<string>();
-            paths.AddRange( Directory.GetFiles( path, extension ) ) ;
+			foreach(string filename in Directory.GetFiles( path, extension ))
+			{
+				yield return filename ;
+			}
 
-            string[ ] directories = Directory.GetDirectories( path ) ;
-            foreach( string eachDirectoryPath in directories )
+			string[ ] directories = Directory.GetDirectories( path ) ;
+            foreach( var file in directories.SelectMany( eachDirectoryPath => GetFiles( eachDirectoryPath, extension ) ) )
             {
-                paths.AddRange( GetFiles( eachDirectoryPath, extension ) ) ;
+            	yield return file ;
             }
-
-            return paths ;
         }
 
     	public static void ModifyFile( string pathToFile, IEnumerable< Mapping > mappings )
